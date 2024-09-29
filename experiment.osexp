@@ -26,7 +26,7 @@ set font_size 18
 set font_italic False
 set font_family mono
 set font_bold False
-set experiment_path "\\\\wsl.localhost\\Ubuntu-22.04\\home\\korne\\user-modelling-project-apples-2"
+set experiment_path "C:\\Users\\indyv\\Documenten\\UserModelling\\user-modelling-project-apples-2"
 set disable_garbage_collection True
 set description "The main experiment item"
 set coordinates uniform
@@ -93,10 +93,10 @@ define inline_script present_trial
 	
 	# simple calculation for timebar
 	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)
+	var.initial_time += 3000	
 	if new:
-		var.initial_time += 5000
-	else:
-		var.initial_time += 3000	
+		var.initial_time += 2000
+	
 	
 	# Show prompt
 	my_canvas = Canvas()
@@ -122,7 +122,9 @@ define inline_script present_trial
 	rt = float("inf")
 	
 	# Keep listening for key presses until the user presses Enter
-	while True:
+	#while time for word has not ran out yet:
+	timing = clock.time() - trial_start_time
+	while var.initial_time >= timing:
 		key, time = my_keyboard.get_key(timeout=var.interval)
 		
 		# The first keypress determines the response time
@@ -142,7 +144,10 @@ define inline_script present_trial
 		elif key == "space":
 			keyboard_response += " "
 			
-		elif not key:
+		#elif not key:
+		#	'timeoout'
+		#	pass
+		elif key == None:
 			pass
 		
 		else:
@@ -154,18 +159,28 @@ define inline_script present_trial
 		if new:
 			my_canvas.text(answer, y = 50, font_size = 20)
 		my_canvas.text(keyboard_response, y = 100)
-		
-		# update the timebar
-		if var.timebar:
-			# print(clock.time(), trial_start_time, width_inner)
-			# my_canvas, x, y, width, height, time
-			my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
-			width_inner = round(((var.initial_time - (clock.time() - trial_start_time)) / var.initial_time) * width)
-			my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = "red")
-		
+		timing = clock.time() - trial_start_time
+		#my_canvas.text(timing, y = 200) debugging 
+		#my_canvas.text(var.initial_time, y = 300) for debug
+		if var.initial_time >= timing:
+			# update the timebar
+			if var.timebar:
+				# print(clock.time(), trial_start_time, width_inner)
+				# my_canvas, x, y, width, height, time
+				my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
+				width_inner = round(((var.initial_time - (clock.time() - trial_start_time)) / var.initial_time) * width)
+				my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = "red")
+		else:
+			# update the timebar
+			if var.timebar:
+				# print(clock.time(), trial_start_time, width_inner)
+				# my_canvas, x, y, width, height, time
+				my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
+				
 		# update the canvas
 		my_canvas.prepare()
 		my_canvas.show()
+		#timing = clock.time() - trial_start_time
 	
 	# Check if the response is correct
 	correct = keyboard_response == answer
@@ -529,7 +544,6 @@ define sequence trial_sequence
 	run present_trial always
 
 define loop while_there_is_time_left
-	set source_file ""
 	set source table
 	set repeat 1000
 	set order random
