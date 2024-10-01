@@ -26,15 +26,15 @@ set font_size 18
 set font_italic False
 set font_family mono
 set font_bold False
-set experiment_path "C:\\Users\\indyv\\Documenten\\UserModelling\\user-modelling-project-apples-2"
-set disable_garbage_collection True
+set experiment_path "\\\\wsl.localhost\\Ubuntu-22.04\\home\\korne\\user-modelling-project-apples-2"
+set disable_garbage_collection False
 set description "The main experiment item"
 set coordinates uniform
 set compensation 0
 set color_backend psycho
 set clock_backend psycho
 set canvas_backend psycho
-set background "#edd1b0"
+set background "#FFFFFF"
 
 define sequence experiment
 	set flush_keyboard yes
@@ -71,7 +71,7 @@ define inline_script learning_session_setup
 	# experiment settings
 	# this is overwritten later
 	var.initial_time = 15000 # time the participant is given for a word in ms
-	var.interval = 100 # time for each frame in ms
+	var.interval = 50 # time for each frame in ms
 	var.timebar = True
 	__end__
 	set _prepare ""
@@ -93,9 +93,9 @@ define inline_script present_trial
 	
 	# simple calculation for timebar
 	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)
-	var.initial_time += 3000	
-	if new:
-		var.initial_time += 2000
+	# var.initial_time += 3000	
+	# if new:
+	# 	var.initial_time += 2000
 	
 	
 	# Show prompt
@@ -167,9 +167,10 @@ define inline_script present_trial
 			if var.timebar:
 				# print(clock.time(), trial_start_time, width_inner)
 				# my_canvas, x, y, width, height, time
-				my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
-				width_inner = round(((var.initial_time - (clock.time() - trial_start_time)) / var.initial_time) * width)
-				my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = "red")
+				my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = [0, 0, 0])    
+				w = (var.initial_time - (clock.time() - trial_start_time)) / var.initial_time
+				width_inner = round(w * width)
+				my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = [round((1 - w) * 255), round(w * 255), 0])
 		else:
 			# update the timebar
 			if var.timebar:
@@ -191,6 +192,8 @@ define inline_script present_trial
 	
 	# Show feedback
 	feedback_color = "green" if correct else "red"
+	if var.initial_time < timing:
+		my_canvas.text("too slow!", y = 100, color = "red")
 	my_canvas.text(keyboard_response, y = 100, color = feedback_color)
 	if not correct:
 		my_canvas.text(answer, y = 150)
@@ -253,7 +256,7 @@ define inline_script slimstampen_setup
 	
 	words = pd.read_csv(pool['swahili_words.csv'])
 	for idx, row in words.sample(frac=1, random_state=0, ignore_index=True).iterrows():
-		m.add_fact(Fact(idx, row["english"], row["swahili"]))
+		m.add_fact(Fact(idx, row["swahili"], row["english"]))
 	
 	# # Add some study facts to the model (you could also read them from a CSV file)
 	# facts = [Fact(1, "hello", "bonjour"),
