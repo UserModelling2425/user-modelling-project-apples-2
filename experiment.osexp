@@ -112,7 +112,7 @@ define sketchpad finito
 define sketchpad instructions
 	set duration keypress
 	set description "Displays stimuli"
-	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Welcome!<br /><br />Please enter the translation of the word and then press Enter.<br />" x=0 y=0 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Welcome!<br /><br />You will find Swahili words which need to be translated to English.<br /><br />There are trials were the translation is shown, here you can press Enter when you have memorized the translation.<br /><br />For the other trials: please enter the translation of the word and then press <b>Enter<b>.<br />" x=0 y=0 z_index=0
 
 define inline_script learning_session_setup
 	set description "Executes Python code"
@@ -128,7 +128,7 @@ define inline_script learning_session_setup
 	var.trial_num = 1
 	
 	# Settings
-	var.session_duration = 60000
+	var.session_duration = 120000
 	var.feedback_duration = 1500
 	var.inter_trial_interval = 400
 	
@@ -472,8 +472,9 @@ define inline_script no_time_bar_even
 	rt = float("inf")
 	
 	# Keep listening for key presses until the user presses Enter
-	#timing = clock.time() - trial_start_time
-	while True:
+	timing = clock.time() - trial_start_time
+	#while True:
+	while var.initial_time >= timing:
 		key, time = my_keyboard.get_key(timeout=var.interval)
 		
 		# The first keypress determines the response time
@@ -524,11 +525,12 @@ define inline_script no_time_bar_even
 	m.register_response(response) 
 	
 	# Show feedback
-	feedback_color = "green" if correct else "red"
-	
-	my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
-	if not correct:
-		my_canvas.text(answer, y = 150, font_size = 25)
+	if not new:
+		feedback_color = "green" if correct else "red"
+		
+		my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+		if not correct:
+			my_canvas.text(answer, y = 150, font_size = 25)
 	my_canvas.prepare()
 	my_canvas.show()
 	clock.sleep(var.feedback_duration)
@@ -584,8 +586,9 @@ define inline_script no_time_bar_odd
 	rt = float("inf")
 	
 	# Keep listening for key presses until the user presses Enter
-	#timing = clock.time() - trial_start_time
-	while True:
+	timing = clock.time() - trial_start_time
+	#while True:
+	while var.initial_time >= timing:
 		key, time = my_keyboard.get_key(timeout=var.interval)
 		
 		# The first keypress determines the response time
@@ -636,11 +639,12 @@ define inline_script no_time_bar_odd
 	m.register_response(response) 
 	
 	# Show feedback
-	feedback_color = "green" if correct else "red"
-	
-	my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
-	if not correct:
-		my_canvas.text(answer, y = 150, font_size = 25)
+	if not new:
+		feedback_color = "green" if correct else "red"
+		
+		my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+		if not correct:
+			my_canvas.text(answer, y = 150, font_size = 25)
 	my_canvas.prepare()
 	my_canvas.show()
 	clock.sleep(var.feedback_duration)
@@ -658,8 +662,7 @@ define inline_script no_time_bar_odd
 	# Increment trial number
 	var.trial_num += 1
 	__end__
-	___prepare__
-	__end__
+	set _prepare ""
 
 define inline_script progress_bar
 	set description "Executes Python code"
@@ -1001,7 +1004,7 @@ define inline_script time_bar_odd
 	answer = next_fact.answer
 	
 	# simple calculation for timebar
-	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)
+	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)/1.5
 	# var.initial_time += 3000	
 	# if new:
 	# 	var.initial_time += 2000
@@ -1100,13 +1103,14 @@ define inline_script time_bar_odd
 	m.register_response(response) 
 	
 	# Show feedback
-	feedback_color = "green" if correct else "red"
-	if var.initial_time < timing:
-		my_canvas.text("too slow!", y = 200, color = "red", font_size = 25)
-	else:
-		my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
-	if not correct:
-		my_canvas.text(answer, y = 150, font_size = 25)
+	if not new:
+		feedback_color = "green" if correct else "red"
+		if var.initial_time < timing:
+			my_canvas.text("time has run out", y = 200, color = "red", font_size = 25)
+		else:
+			my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+		if not correct:
+			my_canvas.text(answer, y = 150, font_size = 25)
 	my_canvas.prepare()
 	my_canvas.show()
 	clock.sleep(var.feedback_duration)
@@ -1155,7 +1159,7 @@ define inline_script time_bar_subeven
 	answer = next_fact.answer
 	
 	# simple calculation for timebar
-	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)
+	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)/1.5
 	# var.initial_time += 3000	
 	# if new:
 	# 	var.initial_time += 2000
@@ -1254,13 +1258,15 @@ define inline_script time_bar_subeven
 	m.register_response(response) 
 	
 	# Show feedback
-	feedback_color = "green" if correct else "red"
-	if var.initial_time < timing:
-		my_canvas.text("too slow!", y = 200, color = "red", font_size = 25)
-	else:
-		my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
-	if not correct:
-		my_canvas.text(answer, y = 150, font_size = 25)
+	if not new:
+		feedback_color = "green" if correct else "red"
+		if var.initial_time < timing:
+			my_canvas.text("time has run out", y = 200, color = "red", font_size = 25)
+		else:
+			my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+		if not correct:
+			my_canvas.text(answer, y = 150, font_size = 25)
+		
 	my_canvas.prepare()
 	my_canvas.show()
 	clock.sleep(var.feedback_duration)
