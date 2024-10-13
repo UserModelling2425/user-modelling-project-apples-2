@@ -22,7 +22,7 @@ set font_size 18
 set font_italic no
 set font_family mono
 set font_bold no
-set experiment_path None
+set experiment_path "D:\\RUG\\Term 3\\ScientificVisualization\\user-modelling-project-apples-2"
 set disable_garbage_collection yes
 set description "The main experiment item"
 set canvas_backend psycho
@@ -83,8 +83,7 @@ define inline_script learning_session_setup
 define inline_script new_inline_script
 	set description "Executes Python code"
 	___run__
-	if len(questions) == 0:
-	    var.end_test = True
+	
 	
 	trial_start_time = clock.time()
 	
@@ -180,6 +179,10 @@ define inline_script new_inline_script
 		
 	# Increment trial number
 	var.trial_num += 1
+	
+	if len(questions) == 0:
+		print("questions is empty")
+	    var.end_test = True
 	__end__
 	set _prepare ""
 

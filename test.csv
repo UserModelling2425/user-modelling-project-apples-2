@@ -1,0 +1,14 @@
+    trial_num  trial_start_time        rt  correct    prompt   answer
+0           1         3218.7281  778.8135    False  kaputula    pants
+1           2         5933.9200   15.6054    False      basi      bus
+2           3         7892.2303   15.3161    False    maliki     king
+3           4         9843.6513   17.1039    False    askari   police
+4           5        11794.6453   15.7569    False     skati    skirt
+5           6        13746.3615   15.4118    False     tunda    fruit
+6           7        15690.7609   16.1595    False    degaga  glasses
+7           8        17641.9936   16.0047    False     dunia    world
+8           9        19594.2785   15.2808    False    kichwa     head
+9          10        21537.8669  298.9084    False     flava    music
+10         11        23767.4426   15.9071    False      kazi     work
+11         12        25712.2354   15.3754    False   dhoruba    storm
+12         13        27656.1782   15.6679    False     lango     door
