@@ -61,6 +61,7 @@ define inline_script learning_session_setup
 	set description "Executes Python code"
 	___run__
 	# Start the clock
+	import pandas as pd
 	var.session_start_time = clock.time()
 	
 	
@@ -77,13 +78,15 @@ define inline_script learning_session_setup
 	var.interval = 50 # time for each frame in ms
 	#var.timebar = True
 	var.end_test = False
+	
+	var.response = pd.DataFrame(columns=["trial_num", "trial_start_time", "rt", "correct", "prompt", "answer"])
 	__end__
 	set _prepare ""
 
 define inline_script new_inline_script
 	set description "Executes Python code"
 	___run__
-	
+	import pandas as pd
 	
 	trial_start_time = clock.time()
 	
@@ -150,7 +153,7 @@ define inline_script new_inline_script
 	correct = keyboard_response == answer
 	
 	# Log response
-	response = [trial_num, trial_start_time, rt, correct, prompt, answer]
+	response.loc[len(response.index)] = [trial_num, trial_start_time, rt, correct, prompt, answer]
 	#m.register_response(response) 
 	
 	# Show feedback
@@ -182,7 +185,7 @@ define inline_script new_inline_script
 	
 	if len(questions) == 0:
 		print("questions is empty")
-	    var.end_test = True
+		var.end_test = True
 	__end__
 	set _prepare ""
 
