@@ -1,0 +1,244 @@
+---
+API: 3
+OpenSesame: 4.0.5
+Platform: nt
+---
+set width 1024
+set title "New experiment"
+set subject_parity even
+set subject_nr 0
+set start experiment
+set sound_sample_size -16
+set sound_freq 48000
+set sound_channels 2
+set sound_buf_size 1024
+set round_decimals 2
+set height 768
+set fullscreen no
+set form_clicks no
+set foreground white
+set font_underline no
+set font_size 18
+set font_italic no
+set font_family mono
+set font_bold no
+set experiment_path None
+set disable_garbage_collection yes
+set description "The main experiment item"
+set canvas_backend psycho
+set background "#3d3846"
+
+define sequence experiment
+	set flush_keyboard yes
+	set description "Runs a number of items in sequence"
+	run getting_started True
+	run setup_inline_script True
+	run instructions True
+	run learning_session_setup True
+	run new_loop True
+	run save_recall_test True
+
+define notepad getting_started
+	__note__
+	Welcome to OpenSesame 4.0 "Melodramatic Milgram"!
+	If you are new to OpenSesame, it is a good idea to follow one of the tutorials,
+	which can be found on the documentation site:
+	- <http://osdoc.cogsci.nl/>
+	You can also check out the examples. These can be opened via:
+	- Menu -> Tools -> Example experiments.
+	And feel free to ask for help on the forum:
+	- <http://forum.cogsci.nl/>
+	Have fun with OpenSesame!
+	__end__
+	set description "A simple notepad to document your experiment. This plug-in does nothing."
+
+define sketchpad instructions
+	set duration keypress
+	set description "Displays stimuli"
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Welcome!<br /><br />You will find Swahili words which need to be translated to English. All of these words have been shown to you before.<br /><br />Please enter the translation of the word and then press <b>Enter<b>.<br />" x=0 y=0 z_index=0
+
+define inline_script learning_session_setup
+	set description "Executes Python code"
+	___run__
+	# Start the clock
+	var.session_start_time = clock.time()
+	
+	
+	# Keep track of trial number
+	var.trial_num = 1
+	
+	# Settings
+	var.feedback_duration = 1500
+	var.inter_trial_interval = 400
+	
+	# experiment settings
+	# this is overwritten later
+	var.initial_time = 15000 # time the participant is given for a word in ms
+	var.interval = 50 # time for each frame in ms
+	#var.timebar = True
+	var.end_test = False
+	__end__
+	set _prepare ""
+
+define inline_script new_inline_script
+	set description "Executes Python code"
+	___run__
+	if len(questions) == 0:
+	    var.end_test = True
+	
+	trial_start_time = clock.time()
+	
+	prompt = questions.pop()
+	answer = answers.pop()
+	
+	my_canvas = Canvas()
+	
+	my_canvas.text(prompt, font_size = 30)
+	
+	my_canvas.prepare()
+	my_canvas.show()
+	
+	# Listen for keyboard input and show keypresses on screen as they occur
+	my_keyboard = Keyboard()
+	keyboard_response = ""
+	erased_answer = False
+	rt = float("inf")
+	
+	# Keep listening for key presses until the user presses Enter
+	#while time for word has not ran out yet:
+	timing = clock.time() - trial_start_time
+	while var.initial_time >= timing:
+		key, time = my_keyboard.get_key(timeout=var.interval)
+		
+		# The first keypress determines the response time
+		if keyboard_response == "" and not erased_answer:
+			rt = clock.time() - trial_start_time
+		
+		if key == "return":
+			break
+			
+		if key == "backspace":
+			keyboard_response = keyboard_response[:-1]
+			# If the answer is completely erased, the RT is no longer informative
+			if keyboard_response == "":
+				erased_answer = True
+				rt = float("inf")
+		
+		elif key == "space":
+			keyboard_response += " "
+			
+		#elif not key:
+		#	'timeoout'
+		#	pass
+		elif key == None:
+			pass
+		
+		else:
+			keyboard_response += key
+	
+		# Update what's on screen'
+		my_canvas.clear()
+		my_canvas.text(prompt, font_size = 30)
+		my_canvas.text(keyboard_response, y = 100, font_size = 25)
+		timing = clock.time() - trial_start_time
+	 
+	 # update the canvas
+		my_canvas.prepare()
+		my_canvas.show()
+		#timing = clock.time() - trial_start_time
+	
+	# Check if the response is correct
+	correct = keyboard_response == answer
+	
+	# Log response
+	response = [trial_num, trial_start_time, rt, correct, prompt, answer]
+	#m.register_response(response) 
+	
+	# Show feedback
+	
+	feedback_color = "green" if correct else "red"
+	if var.initial_time < timing:
+		my_canvas.text("time has run out", y = 200, color = "red", font_size = 25)
+	else:
+		my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+	if not correct:
+		my_canvas.text(answer, y = 150, font_size = 25)
+		
+	my_canvas.prepare()
+	my_canvas.show()
+	clock.sleep(var.feedback_duration)
+	
+	# Clear the screen between trials
+	my_canvas.clear()
+	my_canvas.prepare()
+	my_canvas.show()
+	clock.sleep(var.inter_trial_interval)
+	
+	# Check if time is up
+	#if clock.time() - var.session_start_time >= var.session_duration/2:
+	#	var.block1_time_up = True
+		
+	# Increment trial number
+	var.trial_num += 1
+	__end__
+	set _prepare ""
+
+define loop new_loop
+	set source table
+	set repeat 30
+	set order random
+	set description "Repeatedly runs another item"
+	set cycles 1
+	set continuous no
+	set break_if_on_first yes
+	set break_if "[end_test] == 1"
+	setcycle 0 empty_column ""
+	run new_inline_script
+
+define sketchpad new_sketchpad
+	set duration keypress
+	set description "Displays stimuli"
+
+define inline_script save_recall_test
+	set description "Executes Python code"
+	___run__
+	# Write the SlimStampen data to the OpenSesame log file
+	log.write(response)
+	__end__
+	set _prepare ""
+
+define inline_script setup_inline_script
+	set description "Executes Python code"
+	___run__
+	import csv
+	import os
+	questions = []
+	answers = []
+	
+	file_name = f"subject-{var.subject_nr}.csv"
+	file_path =  os.path.join(var.experiment_path, file_name)
+	
+	with open(file_path, 'r', newline='') as file:
+	    reader = csv.DictReader(file)
+	    for row in reader:
+	        if not row['question'].strip() or not row['answer'].strip():
+	            continue
+	        if row['question'] == "question":
+	            continue
+	        if row['question'].strip() in questions:
+	            continue
+	        questions.append(row['question'].strip())
+	        answers.append(row['answer'].strip())
+	
+	var.answers = answers
+	var.questions = questions
+	__end__
+	set _prepare ""
+
+define sketchpad welcome
+	set start_response_interval no
+	set reset_variables no
+	set duration keypress
+	set description "Displays stimuli"
+	draw textline center=1 color=white font_bold=no font_family=serif font_italic=no font_size=32 html=yes show_if=True text="OpenSesame 4.0 <i>Melodramatic Milgram</i>" x=0 y=0 z_index=0
+
