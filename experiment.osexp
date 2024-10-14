@@ -95,7 +95,10 @@ define sequence experiment
 	set description "Runs a number of items in sequence"
 	run slimstampen_setup always
 	run instructions always
+	run practice_trial True
+	run practice_loop True
 	run learning_session_setup always
+	run new_2_sketchpad True
 	run block1 True
 	run save_firstblock True
 	run break True
@@ -128,7 +131,7 @@ define inline_script learning_session_setup
 	var.trial_num = 1
 	
 	# Settings
-	var.session_duration = 120000
+	var.session_duration = 600000
 	var.feedback_duration = 1500
 	var.inter_trial_interval = 800
 	
@@ -140,6 +143,167 @@ define inline_script learning_session_setup
 	__end__
 	set _prepare ""
 
+define inline_script new_1_inline_script
+	set description "Voert Python-code uit"
+	___run__
+	
+	
+	# Get next fact from the model
+	#next_fact, new = m.get_next_fact(current_time = trial_start_time)
+	#prompt = next_fact.question
+	#answer = next_fact.answer
+	
+	
+	# Show prompt
+	my_canvas = Canvas()
+	
+	# show words
+	my_canvas.text(prompt, font_size = 30)
+	if new:
+		my_canvas.text(answer, y = 50, font_size = 25)
+		my_canvas.text('Press Enter when you got it!', y = 300, x = 300, font_size = 20)
+		
+	# show canvas
+	my_canvas.prepare()
+	my_canvas.show()
+	
+	# Listen for keyboard input and show keypresses on screen as they occur
+	my_keyboard = Keyboard()
+	keyboard_response = ""
+	erased_answer = False
+	rt = float("inf")
+	
+	# Keep listening for key presses until the user presses Enter
+	if not new:
+		timing = clock.time() - trial_start_time
+		#while True:
+		while 15000 >= timing:
+			key, time = my_keyboard.get_key(timeout=var.interval)
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
+				
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+		
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			timing = clock.time() - trial_start_time
+	
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+	
+	else:
+		while True:
+			key, time = my_keyboard.get_key()
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
+				
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+		
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+			my_canvas.text(answer, y = 50, font_size = 25)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			timing = clock.time() - trial_start_time
+			#my_canvas.text(timing, y = 200) debugging 
+			#my_canvas.text(var.initial_time, y = 300) for debug
+		
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+			#timing = clock.time() - trial_start_time
+	
+	# Check if the response is correct
+	correct = keyboard_response == answer
+	
+	# Show feedback
+	if not new:
+		feedback_color = "green" if correct else "red"
+		if var.initial_time < timing:
+			my_canvas.text("time has run out", y = 200, color = "red", font_size = 25)
+		else:
+			my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+		if not correct:
+			my_canvas.text(answer, y = 150, font_size = 25)
+	my_canvas.prepare()
+	my_canvas.show()
+	clock.sleep(1500)
+	
+	# Clear the screen between trials
+	my_canvas.clear()
+	my_canvas.prepare()
+	my_canvas.show()
+	clock.sleep(800)
+	__end__
+	set _prepare ""
+
+define loop new_1_loop
+	set source table
+	set repeat 3
+	set order random
+	set description "Voert herhaaldelijk een ander item uit"
+	set cycles 1
+	set continuous no
+	set break_if_on_first yes
+	set break_if False
+	setcycle 0 ignore_this_variable ""
+	setcycle 0 new_column_2 ""
+	run new_1_sequence
+
+define sequence new_1_sequence
+	set flush_keyboard yes
+	set description "Voert een aantal items achter elkaar uit"
+	run new_1_inline_script True
+
+define sketchpad new_2_sketchpad
+	set duration keypress
+	set description "Displays stimuli"
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Now the experiment begins!<br /><br />Please press <b> Enter </b> after typing the translation and to continue.<br /><br />" x=0 y=0 z_index=0
+
 define inline_script new_model
 	set description "Executes Python code"
 	___run__
@@ -149,7 +313,7 @@ define inline_script new_model
 	
 	new_words = second_set
 	
-	for i, r in new_words.sample(frac=1, random_state=0, ignore_index=True).iterrows():
+	for i, r in new_words.iterrows():
 		m.add_fact(Fact(i, r["swahili"], r["english"]))
 		
 	
@@ -567,8 +731,10 @@ define inline_script no_time_bar_even
 	# Show feedback
 	if not new:
 		feedback_color = "green" if correct else "red"
-		
-		my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+		if var.initial_time < timing:
+			my_canvas.text("time has run out", y = 200, color = "red", font_size = 25)
+		else:
+			my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
 		if not correct:
 			my_canvas.text(answer, y = 150, font_size = 25)
 	my_canvas.prepare()
@@ -721,8 +887,10 @@ define inline_script no_time_bar_odd
 	# Show feedback
 	if not new:
 		feedback_color = "green" if correct else "red"
-		
-		my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+		if var.initial_time < timing:
+			my_canvas.text("time has run out", y = 200, color = "red", font_size = 25)
+		else:
+			my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
 		if not correct:
 			my_canvas.text(answer, y = 150, font_size = 25)
 	my_canvas.prepare()
@@ -743,6 +911,163 @@ define inline_script no_time_bar_odd
 	var.trial_num += 1
 	__end__
 	set _prepare ""
+
+define loop practice_loop
+	set source table
+	set repeat 2
+	set order random
+	set description "Voert herhaaldelijk een ander item uit"
+	set cycles 1
+	set continuous no
+	set break_if_on_first yes
+	set break_if False
+	setcycle 0 ignore_this_variable ""
+	run practicesequence
+
+define inline_script practice_script
+	set description "Voert Python-code uit"
+	___run__
+	trial_start_time = clock.time()
+	#without model just as an example trial
+	question_swahili = practice_word["swahili"].to_string(index=False)
+	answer_swahili = practice_word['english'].to_string(index=False)
+	
+	
+	# Show prompt
+	my_canvas = Canvas()
+	
+	# show words
+	my_canvas.text(question_swahili, font_size = 30)
+	if new:
+		my_canvas.text(answer_swahili, y = 50, font_size = 25)
+		my_canvas.text('Press Enter when you got it!', y = 300, x = 300, font_size = 20)
+		
+	# show canvas
+	my_canvas.prepare()
+	my_canvas.show()
+	
+	# Listen for keyboard input and show keypresses on screen as they occur
+	my_keyboard = Keyboard()
+	keyboard_response = ""
+	erased_answer = False
+	rt = float("inf")
+	
+	# Keep listening for key presses until the user presses Enter
+	if new == False:
+		timing = clock.time() - trial_start_time
+		#while True:
+		while 15000 >= timing:
+			key, time = my_keyboard.get_key()
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
+				
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+		
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(question_swahili, font_size = 30)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+	        #timing = clock.time() - trial_start_time
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+	
+	else:
+		while True:
+			key, time = my_keyboard.get_key()
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
+				
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+		
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(question_swahili, font_size = 30)
+			my_canvas.text(answer_swahili, y = 50, font_size = 25)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			#my_canvas.text(timing, y = 200) debugging 
+			#my_canvas.text(var.initial_time, y = 300) for debug
+		
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+			#timing = clock.time() - trial_start_time
+	
+	# Check if the response is correct
+	correct = keyboard_response == answer_swahili
+	
+	# Show feedback
+	if new == False:
+		feedback_color = "green" if correct else "red"
+		if 15000 < timing:
+			my_canvas.text("time has run out", y = 200, color = "red", font_size = 25)
+		else:
+			my_canvas.text(keyboard_response, y = 100, color = feedback_color, font_size = 25)
+		if not correct:
+			my_canvas.text(answer_swahili, y = 150, font_size = 25)
+	my_canvas.prepare()
+	my_canvas.show()
+	clock.sleep(1500)
+	
+	var.new = False
+	# Clear the screen between trials
+	my_canvas.clear()
+	my_canvas.prepare()
+	my_canvas.show()
+	clock.sleep(800)
+	__end__
+	set _prepare ""
+
+define sketchpad practice_trial
+	set duration keypress
+	set description "Displays stimuli"
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="You will first get a practice trial.<br /><br />Please press <b> Enter </b> after typing the translation.<br /><br />" x=0 y=0 z_index=0
+
+define sequence practicesequence
+	set flush_keyboard yes
+	set description "Voert een aantal items achter elkaar uit"
+	run practice_script True
 
 define inline_script progress_bar
 	set description "Executes Python code"
@@ -779,17 +1104,23 @@ define inline_script slimstampen_setup
 	
 	words = pd.read_csv(pool['swahili_words.csv'], sep=" ")
 	
-	for idx, row in words.sample(frac=1, random_state=0, ignore_index=True).iterrows():
-		m.add_fact(Fact(idx, row["swahili"], row["english"]))
 		
 	even_words = words.head(-1) # 74 words instead of 75
-	# random_state for reproducability
+	practice_word = words[-1:]
 	
+	print(words, even_words, practice_word, practice_word["swahili"].to_string(index=False)) # check check
+	
+	# random_state for reproducability
 	first_set = even_words.sample(frac=0.5,random_state=subject_nr) # set to part nr
 	
-	second_set = pd.concat([even_words,first_set]).drop_duplicates(keep=False)
-	print(first_set, "\n\n\n\n", second_set)
+	for idx, row in first_set.iterrows():
+		m.add_fact(Fact(idx, row["swahili"], row["english"]))
 	
+	second_set = pd.concat([even_words,first_set]).drop_duplicates(keep=False)
+	
+	new = True
+	
+	#print(first_set, second_set)
 	# # Add some study facts to the model (you could also read them from a CSV file)
 	# facts = [Fact(1, "hello", "bonjour"),
 	# 		Fact(2, "dog", "chien"),
