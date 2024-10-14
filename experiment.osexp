@@ -26,7 +26,7 @@ set font_size 18
 set font_italic False
 set font_family mono
 set font_bold False
-set experiment_path "D:\\RUG\\Term 3\\ScientificVisualization\\user-modelling-project-apples-2"
+set experiment_path "C:\\Users\\indyv\\Documenten\\UserModelling\\user-modelling-project-apples-2"
 set disable_garbage_collection False
 set description "The main experiment item"
 set coordinates uniform
@@ -474,7 +474,7 @@ define inline_script no_time_bar_even
 	# Keep listening for key presses until the user presses Enter
 	timing = clock.time() - trial_start_time
 	#while True:
-	while var.initial_time >= timing:
+	while 15000 >= timing:
 		key, time = my_keyboard.get_key(timeout=var.interval)
 		
 		# The first keypress determines the response time
@@ -588,7 +588,7 @@ define inline_script no_time_bar_odd
 	# Keep listening for key presses until the user presses Enter
 	timing = clock.time() - trial_start_time
 	#while True:
-	while var.initial_time >= timing:
+	while 15000 >= timing:
 		key, time = my_keyboard.get_key(timeout=var.interval)
 		
 		# The first keypress determines the response time
@@ -1004,7 +1004,7 @@ define inline_script time_bar_odd
 	answer = next_fact.answer
 	
 	# simple calculation for timebar
-	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)/1.5
+	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)*2
 	# var.initial_time += 3000	
 	# if new:
 	# 	var.initial_time += 2000
@@ -1159,7 +1159,7 @@ define inline_script time_bar_subeven
 	answer = next_fact.answer
 	
 	# simple calculation for timebar
-	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)/1.5
+	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)*2
 	# var.initial_time += 3000	
 	# if new:
 	# 	var.initial_time += 2000
