@@ -1083,11 +1083,16 @@ define inline_script time_bar_odd
 	prompt = next_fact.question
 	answer = next_fact.answer
 	
-	# simple calculation for timebar
-	var.initial_time = (m.get_max_reaction_time_for_fact(next_fact)/1.5)*2
-	# var.initial_time += 3000	
-	# if new:
-	# 	var.initial_time += 2000
+	if not new:
+	#where we think 200 cpm is avg so 3,33 per s.
+		reading_time = m.get_reading_time(answer)
+	
+		count = len(answer)
+		typespeed = count * 300.33
+		added_time = reading_time+typespeed
+		var.initial_time = ((m.get_max_reaction_time_for_fact(next_fact)/1.5)*2) + added_time
+	
+	
 	
 	
 	# Show prompt
@@ -1277,11 +1282,16 @@ define inline_script time_bar_subeven
 	prompt = next_fact.question
 	answer = next_fact.answer
 	
-	# simple calculation for timebar
-	var.initial_time = (m.get_max_reaction_time_for_fact(next_fact)/1.5)*2
-	# var.initial_time += 3000	
-	# if new:
-	# 	var.initial_time += 2000
+	if not new:
+	#where we think 200 cpm is avg so 3,33 per s.
+		reading_time = m.get_reading_time(answer)
+	
+		count = len(answer)
+		typespeed = count * 300.33
+		added_time = reading_time+typespeed
+		var.initial_time = ((m.get_max_reaction_time_for_fact(next_fact)/1.5)*2) + added_time
+	
+	
 	
 	
 	# Show prompt
