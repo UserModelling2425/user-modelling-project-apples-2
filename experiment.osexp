@@ -130,7 +130,7 @@ define inline_script learning_session_setup
 	# Settings
 	var.session_duration = 120000
 	var.feedback_duration = 1500
-	var.inter_trial_interval = 400
+	var.inter_trial_interval = 800
 	
 	# experiment settings
 	# this is overwritten later
@@ -447,10 +447,8 @@ define inline_script no_time_bar_even
 	answer = next_fact.answer
 	
 	# simple calculation for timebar
-	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)
-	# var.initial_time += 3000	
-	# if new:
-	# 	var.initial_time += 2000
+	var.initial_time = 15000
+	
 	
 	
 	# Show prompt
@@ -460,6 +458,7 @@ define inline_script no_time_bar_even
 	my_canvas.text(prompt, font_size = 30)
 	if new:
 		my_canvas.text(answer, y = 50, font_size = 25)
+		my_canvas.text('Press Enter when you got it!', y = 300, x = 300, font_size = 20)
 		
 	# show canvas
 	my_canvas.prepare()
@@ -472,50 +471,91 @@ define inline_script no_time_bar_even
 	rt = float("inf")
 	
 	# Keep listening for key presses until the user presses Enter
-	timing = clock.time() - trial_start_time
-	#while True:
-	while 15000 >= timing:
-		key, time = my_keyboard.get_key(timeout=var.interval)
-		
-		# The first keypress determines the response time
-		if keyboard_response == "" and not erased_answer:
-			rt = clock.time() - trial_start_time
-		
-		if key == "return":
-			break
-			
-		if key == "backspace":
-			keyboard_response = keyboard_response[:-1]
-			# If the answer is completely erased, the RT is no longer informative
-			if keyboard_response == "":
-				erased_answer = True
-				rt = float("inf")
-		
-		elif key == "space":
-			keyboard_response += " "
-			
-	
-		elif key == None:
-			pass
-		
-		else:
-			keyboard_response += key
-	
-		# Update what's on screen'
-		my_canvas.clear()
-		my_canvas.text(prompt, font_size = 30)
-		if new:
-			my_canvas.text(answer, y = 50, font_size = 25)
-		my_canvas.text(keyboard_response, y = 100, font_size = 25)
+	if not new:
 		timing = clock.time() - trial_start_time
-		#my_canvas.text(timing, y = 200) debugging 
-		#my_canvas.text(var.initial_time, y = 300) for debug
-	
+		#while True:
+		while var.initial_time >= timing:
+			key, time = my_keyboard.get_key(timeout=var.interval)
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
 				
-		# update the canvas
-		my_canvas.prepare()
-		my_canvas.show()
-		#timing = clock.time() - trial_start_time
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+		
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			timing = clock.time() - trial_start_time
+			#my_canvas.text(timing, y = 200) debugging 
+			#my_canvas.text(var.initial_time, y = 300) for debug
+		
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+			#timing = clock.time() - trial_start_time
+	else:
+		while True:
+			key, time = my_keyboard.get_key()
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
+				
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+		
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+			my_canvas.text(answer, y = 50, font_size = 25)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			timing = clock.time() - trial_start_time
+			#my_canvas.text(timing, y = 200) debugging 
+			#my_canvas.text(var.initial_time, y = 300) for debug
+		
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+			#timing = clock.time() - trial_start_time
 	
 	# Check if the response is correct
 	correct = keyboard_response == answer
@@ -560,11 +600,9 @@ define inline_script no_time_bar_odd
 	prompt = next_fact.question
 	answer = next_fact.answer
 	
-	# simple calculation for timebar
-	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)
-	# var.initial_time += 3000	
-	# if new:
-	# 	var.initial_time += 2000
+	# time in trial
+	var.initial_time = 15000
+	
 	
 	
 	# Show prompt
@@ -574,6 +612,7 @@ define inline_script no_time_bar_odd
 	my_canvas.text(prompt, font_size = 30)
 	if new:
 		my_canvas.text(answer, y = 50, font_size = 25)
+		my_canvas.text('Press Enter when you got it!', y = 300, x = 300, font_size = 20)
 		
 	# show canvas
 	my_canvas.prepare()
@@ -586,50 +625,91 @@ define inline_script no_time_bar_odd
 	rt = float("inf")
 	
 	# Keep listening for key presses until the user presses Enter
-	timing = clock.time() - trial_start_time
-	#while True:
-	while 15000 >= timing:
-		key, time = my_keyboard.get_key(timeout=var.interval)
-		
-		# The first keypress determines the response time
-		if keyboard_response == "" and not erased_answer:
-			rt = clock.time() - trial_start_time
-		
-		if key == "return":
-			break
-			
-		if key == "backspace":
-			keyboard_response = keyboard_response[:-1]
-			# If the answer is completely erased, the RT is no longer informative
-			if keyboard_response == "":
-				erased_answer = True
-				rt = float("inf")
-		
-		elif key == "space":
-			keyboard_response += " "
-			
-	
-		elif key == None:
-			pass
-		
-		else:
-			keyboard_response += key
-	
-		# Update what's on screen'
-		my_canvas.clear()
-		my_canvas.text(prompt, font_size = 30)
-		if new:
-			my_canvas.text(answer, y = 50, font_size = 25)
-		my_canvas.text(keyboard_response, y = 100, font_size = 25)
+	if not new:
 		timing = clock.time() - trial_start_time
-		#my_canvas.text(timing, y = 200) debugging 
-		#my_canvas.text(var.initial_time, y = 300) for debug
-	
+		#while True:
+		while var.initial_time >= timing:
+			key, time = my_keyboard.get_key(timeout=var.interval)
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
 				
-		# update the canvas
-		my_canvas.prepare()
-		my_canvas.show()
-		#timing = clock.time() - trial_start_time
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+		
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			timing = clock.time() - trial_start_time
+			#my_canvas.text(timing, y = 200) debugging 
+			#my_canvas.text(var.initial_time, y = 300) for debug
+		
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+			#timing = clock.time() - trial_start_time
+	else:
+		while True:
+			key, time = my_keyboard.get_key()
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
+				
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+		
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+			my_canvas.text(answer, y = 50, font_size = 25)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			timing = clock.time() - trial_start_time
+			#my_canvas.text(timing, y = 200) debugging 
+			#my_canvas.text(var.initial_time, y = 300) for debug
+		
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+			#timing = clock.time() - trial_start_time
 	
 	# Check if the response is correct
 	correct = keyboard_response == answer
@@ -1004,7 +1084,7 @@ define inline_script time_bar_odd
 	answer = next_fact.answer
 	
 	# simple calculation for timebar
-	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)*2
+	var.initial_time = (m.get_max_reaction_time_for_fact(next_fact)/1.5)*2
 	# var.initial_time += 3000	
 	# if new:
 	# 	var.initial_time += 2000
@@ -1014,7 +1094,7 @@ define inline_script time_bar_odd
 	my_canvas = Canvas()
 	
 	# the size and position of the time bar
-	if var.timebar:
+	if var.timebar and not new:
 		x, y, width, height = -200, -200, 400, 40
 		my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black") 
 	
@@ -1022,6 +1102,7 @@ define inline_script time_bar_odd
 	my_canvas.text(prompt, font_size = 30)
 	if new:
 		my_canvas.text(answer, y = 50, font_size = 25)
+		my_canvas.text('Press Enter when you got it!', y = 300, x = 300, font_size = 20)
 		
 	# show canvas
 	my_canvas.prepare()
@@ -1035,65 +1116,103 @@ define inline_script time_bar_odd
 	
 	# Keep listening for key presses until the user presses Enter
 	#while time for word has not ran out yet:
-	timing = clock.time() - trial_start_time
-	while var.initial_time >= timing:
-		key, time = my_keyboard.get_key(timeout=var.interval)
-		
-		# The first keypress determines the response time
-		if keyboard_response == "" and not erased_answer:
-			rt = clock.time() - trial_start_time
-		
-		if key == "return":
-			break
-			
-		if key == "backspace":
-			keyboard_response = keyboard_response[:-1]
-			# If the answer is completely erased, the RT is no longer informative
-			if keyboard_response == "":
-				erased_answer = True
-				rt = float("inf")
-		
-		elif key == "space":
-			keyboard_response += " "
-			
-		#elif not key:
-		#	'timeoout'
-		#	pass
-		elif key == None:
-			pass
-		
-		else:
-			keyboard_response += key
-	
-		# Update what's on screen'
-		my_canvas.clear()
-		my_canvas.text(prompt, font_size = 30)
-		if new:
-			my_canvas.text(answer, y = 50, font_size = 25)
-		my_canvas.text(keyboard_response, y = 100, font_size = 25)
+	if not new:
 		timing = clock.time() - trial_start_time
-		#my_canvas.text(timing, y = 200) debugging 
-		#my_canvas.text(var.initial_time, y = 300) for debug
-		if var.initial_time >= timing:
-			# update the timebar
-			if var.timebar:
-				# print(clock.time(), trial_start_time, width_inner)
-				# my_canvas, x, y, width, height, time
-				my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = [0, 0, 0])    
-				w = (var.initial_time - (clock.time() - trial_start_time)) / var.initial_time
-				width_inner = round(w * width)
-				my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = [round((1 - w) * 255), round(w * 255), 0])
-		else:
-			# update the timebar
-			if var.timebar:
-				# print(clock.time(), trial_start_time, width_inner)
-				# my_canvas, x, y, width, height, time
-				my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
+		while var.initial_time >= timing:
+			key, time = my_keyboard.get_key(timeout=var.interval)
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
 				
-		# update the canvas
-		my_canvas.prepare()
-		my_canvas.show()
-		#timing = clock.time() - trial_start_time
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+			#elif not key:
+			#	'timeoout'
+			#	pass
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+	
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			
+			timing = clock.time() - trial_start_time
+			#my_canvas.text(timing, y = 200) debugging 
+			#my_canvas.text(var.initial_time, y = 300) for debug
+			if var.initial_time >= timing:
+				# update the timebar
+				if var.timebar:
+					# print(clock.time(), trial_start_time, width_inner)
+					# my_canvas, x, y, width, height, time
+					my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = [0, 0, 0])    
+					w = (var.initial_time - (clock.time() - trial_start_time)) / var.initial_time
+					width_inner = round(w * width)
+					my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = [round((1 - w) * 255), round(w * 255), 0])
+			else:
+				# update the timebar
+				if var.timebar:
+					# print(clock.time(), trial_start_time, width_inner)
+					# my_canvas, x, y, width, height, time
+					my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+			#timing = clock.time() - trial_start_time
+	else:
+		while True:
+			key, time = my_keyboard.get_key()
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
+				
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+			my_canvas.text(answer, y = 50, font_size = 25)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+	 
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+	
 	
 	# Check if the response is correct
 	correct = keyboard_response == answer
@@ -1159,7 +1278,7 @@ define inline_script time_bar_subeven
 	answer = next_fact.answer
 	
 	# simple calculation for timebar
-	var.initial_time = m.get_max_reaction_time_for_fact(next_fact)*2
+	var.initial_time = (m.get_max_reaction_time_for_fact(next_fact)/1.5)*2
 	# var.initial_time += 3000	
 	# if new:
 	# 	var.initial_time += 2000
@@ -1169,7 +1288,7 @@ define inline_script time_bar_subeven
 	my_canvas = Canvas()
 	
 	# the size and position of the time bar
-	if var.timebar:
+	if var.timebar and not new:
 		x, y, width, height = -200, -200, 400, 40
 		my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black") 
 	
@@ -1177,7 +1296,7 @@ define inline_script time_bar_subeven
 	my_canvas.text(prompt, font_size = 30)
 	if new:
 		my_canvas.text(answer, y = 50, font_size = 25)
-		
+		my_canvas.text('Press Enter when you got it!', y = 300, x = 300, font_size = 20)
 	# show canvas
 	my_canvas.prepare()
 	my_canvas.show()
@@ -1190,65 +1309,102 @@ define inline_script time_bar_subeven
 	
 	# Keep listening for key presses until the user presses Enter
 	#while time for word has not ran out yet:
-	timing = clock.time() - trial_start_time
-	while var.initial_time >= timing:
-		key, time = my_keyboard.get_key(timeout=var.interval)
-		
-		# The first keypress determines the response time
-		if keyboard_response == "" and not erased_answer:
-			rt = clock.time() - trial_start_time
-		
-		if key == "return":
-			break
-			
-		if key == "backspace":
-			keyboard_response = keyboard_response[:-1]
-			# If the answer is completely erased, the RT is no longer informative
-			if keyboard_response == "":
-				erased_answer = True
-				rt = float("inf")
-		
-		elif key == "space":
-			keyboard_response += " "
-			
-		#elif not key:
-		#	'timeoout'
-		#	pass
-		elif key == None:
-			pass
-		
-		else:
-			keyboard_response += key
-	
-		# Update what's on screen'
-		my_canvas.clear()
-		my_canvas.text(prompt, font_size = 30)
-		if new:
-			my_canvas.text(answer, y = 50, font_size = 25)
-		my_canvas.text(keyboard_response, y = 100, font_size = 25)
+	if not new:
 		timing = clock.time() - trial_start_time
-		#my_canvas.text(timing, y = 200) debugging 
-		#my_canvas.text(var.initial_time, y = 300) for debug
-		if var.initial_time >= timing:
-			# update the timebar
-			if var.timebar:
-				# print(clock.time(), trial_start_time, width_inner)
-				# my_canvas, x, y, width, height, time
-				my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = [0, 0, 0])    
-				w = (var.initial_time - (clock.time() - trial_start_time)) / var.initial_time
-				width_inner = round(w * width)
-				my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = [round((1 - w) * 255), round(w * 255), 0])
-		else:
-			# update the timebar
-			if var.timebar:
-				# print(clock.time(), trial_start_time, width_inner)
-				# my_canvas, x, y, width, height, time
-				my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
+		while var.initial_time >= timing:
+			key, time = my_keyboard.get_key(timeout=var.interval)
+			
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
 				
-		# update the canvas
-		my_canvas.prepare()
-		my_canvas.show()
-		#timing = clock.time() - trial_start_time
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+			#elif not key:
+			#	'timeoout'
+			#	pass
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+	
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+			
+			timing = clock.time() - trial_start_time
+			#my_canvas.text(timing, y = 200) debugging 
+			#my_canvas.text(var.initial_time, y = 300) for debug
+			if var.initial_time >= timing:
+				# update the timebar
+				if var.timebar:
+					# print(clock.time(), trial_start_time, width_inner)
+					# my_canvas, x, y, width, height, time
+					my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = [0, 0, 0])    
+					w = (var.initial_time - (clock.time() - trial_start_time)) / var.initial_time
+					width_inner = round(w * width)
+					my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = [round((1 - w) * 255), round(w * 255), 0])
+			else:
+				# update the timebar
+				if var.timebar:
+					# print(clock.time(), trial_start_time, width_inner)
+					# my_canvas, x, y, width, height, time
+					my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
+			#timing = clock.time() - trial_start_time
+	else:
+		while True:
+			key, time = my_keyboard.get_key()
+			# The first keypress determines the response time
+			if keyboard_response == "" and not erased_answer:
+				rt = clock.time() - trial_start_time
+			
+			if key == "return":
+				break
+				
+			if key == "backspace":
+				keyboard_response = keyboard_response[:-1]
+				# If the answer is completely erased, the RT is no longer informative
+				if keyboard_response == "":
+					erased_answer = True
+					rt = float("inf")
+			
+			elif key == "space":
+				keyboard_response += " "
+				
+			elif key == None:
+				pass
+			
+			else:
+				keyboard_response += key
+		
+			# Update what's on screen'
+			my_canvas.clear()
+			my_canvas.text(prompt, font_size = 30)
+			my_canvas.text(answer, y = 50, font_size = 25)
+			my_canvas.text(keyboard_response, y = 100, font_size = 25)
+	 
+					
+			# update the canvas
+			my_canvas.prepare()
+			my_canvas.show()
 	
 	# Check if the response is correct
 	correct = keyboard_response == answer
