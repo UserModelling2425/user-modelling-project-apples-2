@@ -36,6 +36,12 @@ set clock_backend psycho
 set canvas_backend psycho
 set background "#FFFFFF"
 
+define sketchpad begin_experiment
+	set duration keypress
+	set description "Displays stimuli"
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Now the experiment begins!<br /><br /><br />" x=0.0 y=32.0 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="Press Enter to start the experiment." x=0.0 y=96.0 z_index=0
+
 define loop block1
 	set source table
 	set repeat 1000
@@ -98,7 +104,7 @@ define sequence experiment
 	run practice_trial True
 	run practice_loop True
 	run learning_session_setup always
-	run new_2_sketchpad True
+	run begin_experiment True
 	run block1 True
 	run save_firstblock True
 	run break True
@@ -115,7 +121,13 @@ define sketchpad finito
 define sketchpad instructions
 	set duration keypress
 	set description "Displays stimuli"
-	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Welcome!<br /><br />You will find Swahili words which need to be translated to English.<br /><br />There are trials were the translation is shown, here you can press Enter when you have memorized the translation.<br /><br />For the other trials: please enter the translation of the word and then press <b>Enter<b>.<br />" x=0 y=0 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Welcome!<br /><br />You will find Swahili words which need to be translated to English.<br /><br />There are trials were the translation is shown, here you can press Enter when you have memorized the translation.<br /><br />For the other trials: please enter the translation of the word and then press <b>Enter</b>.<br /><br />Then if your translation was correct, it will appear in green:<br /><br /><br /><br />Otherwise in red, with the correct translation beneath it:" x=0.0 y=0.0 z_index=0
+	draw textline center=1 color=red font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="translation<br />" x=-32.0 y=224.0 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="" x=-96 y=256 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="correct translation<br />" x=-32.0 y=256.0 z_index=0
+	draw textline center=1 color=red font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="" x=-64 y=256 z_index=0
+	draw textline center=1 color=green font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text=translation x=-32.0 y=96.0 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="Press Enter to continue." x=320.0 y=352.0 z_index=0
 
 define inline_script learning_session_setup
 	set description "Executes Python code"
@@ -282,6 +294,7 @@ define inline_script new_1_inline_script
 	set _prepare ""
 
 define loop new_1_loop
+	set source_file ""
 	set source table
 	set repeat 3
 	set order random
@@ -298,11 +311,6 @@ define sequence new_1_sequence
 	set flush_keyboard yes
 	set description "Voert een aantal items achter elkaar uit"
 	run new_1_inline_script True
-
-define sketchpad new_2_sketchpad
-	set duration keypress
-	set description "Displays stimuli"
-	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Now the experiment begins!<br /><br />Please press <b> Enter </b> after typing the translation and to continue.<br /><br />" x=0 y=0 z_index=0
 
 define inline_script new_model
 	set description "Executes Python code"
@@ -913,6 +921,7 @@ define inline_script no_time_bar_odd
 	set _prepare ""
 
 define loop practice_loop
+	set source_file ""
 	set source table
 	set repeat 2
 	set order random
