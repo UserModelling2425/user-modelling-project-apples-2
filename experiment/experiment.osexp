@@ -26,7 +26,7 @@ set font_size 18
 set font_italic False
 set font_family mono
 set font_bold False
-set experiment_path "C:\\Users\\indyv\\Documenten\\UserModelling\\user-modelling-project-apples-2"
+set experiment_path "\\\\wsl.localhost\\Ubuntu-22.04\\home\\korne\\user-modelling-project-apples-2\\experiment"
 set disable_garbage_collection False
 set description "The main experiment item"
 set coordinates uniform
@@ -39,8 +39,8 @@ set background "#FFFFFF"
 define sketchpad begin_experiment
 	set duration keypress
 	set description "Displays stimuli"
-	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Now the experiment begins!<br /><br /><br />" x=0.0 y=32.0 z_index=0
-	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="Press Enter to start the experiment." x=0.0 y=96.0 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Now the experiment begins!<br /><br /><br />" x=0 y=32 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="Press Enter to start the experiment." x=0 y=96 z_index=0
 
 define loop block1
 	set source table
@@ -121,13 +121,13 @@ define sketchpad finito
 define sketchpad instructions
 	set duration keypress
 	set description "Displays stimuli"
-	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Welcome!<br /><br />You will find Swahili words which need to be translated to English.<br /><br />There are trials were the translation is shown, here you can press Enter when you have memorized the translation.<br /><br />For the other trials: please enter the translation of the word and then press <b>Enter</b>.<br /><br />Then if your translation was correct, it will appear in green:<br /><br /><br /><br />Otherwise in red, with the correct translation beneath it:" x=0.0 y=0.0 z_index=0
-	draw textline center=1 color=red font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="translation<br />" x=-32.0 y=224.0 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=always text="Welcome!<br /><br />You will find Swahili words which need to be translated to English.<br /><br />There are trials were the translation is shown, here you can press Enter when you have memorized the translation.<br /><br />For the other trials: please enter the translation of the word and then press <b>Enter</b>.<br /><br />Then if your translation was correct, it will appear in green:<br /><br /><br /><br />Otherwise in red, with the correct translation beneath it:" x=0 y=0 z_index=0
+	draw textline center=1 color=red font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="translation<br />" x=-32 y=224 z_index=0
 	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="" x=-96 y=256 z_index=0
-	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="correct translation<br />" x=-32.0 y=256.0 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="correct translation<br />" x=-32 y=256 z_index=0
 	draw textline center=1 color=red font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="" x=-64 y=256 z_index=0
-	draw textline center=1 color=green font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text=translation x=-32.0 y=96.0 z_index=0
-	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="Press Enter to continue." x=320.0 y=352.0 z_index=0
+	draw textline center=1 color=green font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text=translation x=-32 y=96 z_index=0
+	draw textline center=1 color=black font_bold=no font_family=mono font_italic=no font_size=20 html=yes show_if=True text="Press Enter to continue." x=320 y=352 z_index=0
 
 define inline_script learning_session_setup
 	set description "Executes Python code"
@@ -294,7 +294,6 @@ define inline_script new_1_inline_script
 	set _prepare ""
 
 define loop new_1_loop
-	set source_file ""
 	set source table
 	set repeat 3
 	set order random
@@ -345,9 +344,9 @@ define inline_script new_model
 	from collections import namedtuple
 	
 	
-	Fact = namedtuple("Fact", "fact_id, question, answer")
-	Response = namedtuple("Response", "fact, start_time, rt, correct")
-	Encounter = namedtuple("Encounter", "activation, time, reaction_time, decay")
+	# Fact = namedtuple("Fact", "fact_id, question, answer")
+	# Response = namedtuple("Response", "fact, start_time, rt, correct, test")
+	# Encounter = namedtuple("Encounter", "activation, time, reaction_time, decay")
 	
 	class SpacingModel(object):
 	
@@ -618,10 +617,12 @@ define inline_script no_time_bar_even
 	prompt = next_fact.question
 	answer = next_fact.answer
 	
+	activation = m.calculate_activation(trial_start_time, next_fact)
+	reading_time = m.get_reading_time(prompt)
+	reaction_time =	m.estimate_reaction_time_from_activation(activation, reading_time)
+	
 	# simple calculation for timebar
 	var.initial_time = 15000
-	
-	
 	
 	# Show prompt
 	my_canvas = Canvas()
@@ -641,6 +642,7 @@ define inline_script no_time_bar_even
 	keyboard_response = ""
 	erased_answer = False
 	rt = float("inf")
+	on_time = False
 	
 	# Keep listening for key presses until the user presses Enter
 	if not new:
@@ -654,6 +656,7 @@ define inline_script no_time_bar_even
 				rt = clock.time() - trial_start_time
 			
 			if key == "return":
+				on_time = True
 				break
 				
 			if key == "backspace":
@@ -695,6 +698,7 @@ define inline_script no_time_bar_even
 				rt = clock.time() - trial_start_time
 			
 			if key == "return":
+				on_time = True
 				break
 				
 			if key == "backspace":
@@ -733,7 +737,7 @@ define inline_script no_time_bar_even
 	correct = keyboard_response == answer
 	
 	# Log response
-	response = Response(next_fact, trial_start_time, rt, correct)
+	response = Response(next_fact, trial_start_time, rt, correct, var.initial_time, keyboard_response, new, on_time, reaction_time, False)
 	m.register_response(response) 
 	
 	# Show feedback
@@ -774,6 +778,10 @@ define inline_script no_time_bar_odd
 	prompt = next_fact.question
 	answer = next_fact.answer
 	
+	activation = m.calculate_activation(trial_start_time, next_fact)
+	reading_time = m.get_reading_time(prompt)
+	reaction_time =	m.estimate_reaction_time_from_activation(activation, reading_time)
+	
 	# time in trial
 	var.initial_time = 15000
 	
@@ -797,6 +805,7 @@ define inline_script no_time_bar_odd
 	keyboard_response = ""
 	erased_answer = False
 	rt = float("inf")
+	on_time = False
 	
 	# Keep listening for key presses until the user presses Enter
 	if not new:
@@ -810,6 +819,7 @@ define inline_script no_time_bar_odd
 				rt = clock.time() - trial_start_time
 			
 			if key == "return":
+				on_time = True
 				break
 				
 			if key == "backspace":
@@ -851,6 +861,7 @@ define inline_script no_time_bar_odd
 				rt = clock.time() - trial_start_time
 			
 			if key == "return":
+				on_time = True
 				break
 				
 			if key == "backspace":
@@ -889,7 +900,7 @@ define inline_script no_time_bar_odd
 	correct = keyboard_response == answer
 	
 	# Log response
-	response = Response(next_fact, trial_start_time, rt, correct)
+	response = Response(next_fact, trial_start_time, rt, correct, var.initial_time, keyboard_response, new, on_time, reaction_time, False)
 	m.register_response(response) 
 	
 	# Show feedback
@@ -921,7 +932,6 @@ define inline_script no_time_bar_odd
 	set _prepare ""
 
 define loop practice_loop
-	set source_file ""
 	set source table
 	set repeat 2
 	set order random
@@ -1126,6 +1136,7 @@ define inline_script slimstampen_setup
 		m.add_fact(Fact(idx, row["swahili"], row["english"]))
 	
 	second_set = pd.concat([even_words,first_set]).drop_duplicates(keep=False)
+	second_set = second_set.sample(frac=1, random_state=subject_nr)
 	
 	new = True
 	
@@ -1151,7 +1162,7 @@ define inline_script slimstampen_setup
 	
 	
 	Fact = namedtuple("Fact", "fact_id, question, answer")
-	Response = namedtuple("Response", "fact, start_time, rt, correct")
+	Response = namedtuple("Response", "fact, start_time, rt, correct, time_bar, keyboard_response, new, on_time, expected_rt, time_bar_visible")
 	Encounter = namedtuple("Encounter", "activation, time, reaction_time, decay")
 	
 	class SpacingModel(object):
@@ -1423,16 +1434,16 @@ define inline_script time_bar_odd
 	prompt = next_fact.question
 	answer = next_fact.answer
 	
+	activation = m.calculate_activation(trial_start_time, next_fact)
+	reading_time = m.get_reading_time(prompt)
+	reaction_time =	m.estimate_reaction_time_from_activation(activation, reading_time)
+		
 	if not new:
-	#where we think 200 cpm is avg so 3,33 per s.
-		reading_time = m.get_reading_time(answer)
-	
-		count = len(answer)
-		typespeed = count * 300.33
-		added_time = reading_time+typespeed
-		var.initial_time = ((m.get_max_reaction_time_for_fact(next_fact)/1.5)*2) + added_time
-	
-	
+		#where we think 200 cpm is avg so 3,33 per s.
+		typespeed = len(answer) * 333
+		var.initial_time = (reaction_time * 2) + typespeed
+	else:
+		var.initial_time = 15000
 	
 	
 	# Show prompt
@@ -1458,6 +1469,7 @@ define inline_script time_bar_odd
 	keyboard_response = ""
 	erased_answer = False
 	rt = float("inf")
+	on_time = False
 	
 	# Keep listening for key presses until the user presses Enter
 	#while time for word has not ran out yet:
@@ -1471,6 +1483,7 @@ define inline_script time_bar_odd
 				rt = clock.time() - trial_start_time
 			
 			if key == "return":
+				on_time = True
 				break
 				
 			if key == "backspace":
@@ -1529,6 +1542,7 @@ define inline_script time_bar_odd
 				rt = clock.time() - trial_start_time
 			
 			if key == "return":
+				on_time = True
 				break
 				
 			if key == "backspace":
@@ -1563,7 +1577,7 @@ define inline_script time_bar_odd
 	correct = keyboard_response == answer
 	
 	# Log response
-	response = Response(next_fact, trial_start_time, rt, correct)
+	response = Response(next_fact, trial_start_time, rt, correct, var.initial_time, keyboard_response, new, on_time, reaction_time, True)
 	m.register_response(response) 
 	
 	# Show feedback
@@ -1622,17 +1636,16 @@ define inline_script time_bar_subeven
 	prompt = next_fact.question
 	answer = next_fact.answer
 	
+	activation = m.calculate_activation(trial_start_time, next_fact)
+	reading_time = m.get_reading_time(prompt)
+	reaction_time =	m.estimate_reaction_time_from_activation(activation, reading_time)
+		
 	if not new:
-	#where we think 200 cpm is avg so 3,33 per s.
-		reading_time = m.get_reading_time(answer)
-	
-		count = len(answer)
-		typespeed = count * 300.33
-		added_time = reading_time+typespeed
-		var.initial_time = ((m.get_max_reaction_time_for_fact(next_fact)/1.5)*2) + added_time
-	
-	
-	
+		#where we think 200 cpm is avg so 3,33 per s.
+		typespeed = len(answer) * 333
+		var.initial_time = (reaction_time * 2) + typespeed
+	else:
+		var.initial_time = 15000
 	
 	# Show prompt
 	my_canvas = Canvas()
@@ -1656,6 +1669,7 @@ define inline_script time_bar_subeven
 	keyboard_response = ""
 	erased_answer = False
 	rt = float("inf")
+	on_time = False
 	
 	# Keep listening for key presses until the user presses Enter
 	#while time for word has not ran out yet:
@@ -1669,6 +1683,7 @@ define inline_script time_bar_subeven
 				rt = clock.time() - trial_start_time
 			
 			if key == "return":
+				on_time = True
 				break
 				
 			if key == "backspace":
@@ -1727,6 +1742,7 @@ define inline_script time_bar_subeven
 				rt = clock.time() - trial_start_time
 			
 			if key == "return":
+				on_time = True
 				break
 				
 			if key == "backspace":
@@ -1760,7 +1776,7 @@ define inline_script time_bar_subeven
 	correct = keyboard_response == answer
 	
 	# Log response
-	response = Response(next_fact, trial_start_time, rt, correct)
+	response = Response(next_fact, trial_start_time, rt, correct, var.initial_time, keyboard_response, new, on_time, reaction_time, True)
 	m.register_response(response) 
 	
 	# Show feedback
@@ -1794,21 +1810,7 @@ define inline_script time_bar_subeven
 	#print(clock.time() - var.session_start_time, "\n\nHELLO")
 	#print(var.trial_num, var.time_up)
 	__end__
-	___prepare__
-	def draw_progress_bar(my_canvas):
-	    # time in s
-	    x, y, width, height, time = -200, -200, 400, 40, 15
-	    # my_canvas, x, y, width, height, time
-	    my_canvas["myRect"] = Rect(x - 1, y - 1, width + 2, height + 2, fill=False, color = "black")    
-	    for i in range(time)[::-1]:
-	        width_inner = round((i/time) * width)
-	        print(width_inner)
-	        my_canvas['my_rect'] = Rect(x, y, width_inner, height, fill=True, color = "red")
-	        my_canvas.prepare()
-	        my_canvas.show()
-	        sleep(0.1)
-	        del my_canvas['my_rect']
-	__end__
+	set _prepare ""
 
 define inline_script trial_no_time
 	set description "Voert Python-code uit"
