@@ -25,7 +25,7 @@ set font_size 18
 set font_italic False
 set font_family mono
 set font_bold False
-set experiment_path "\\\\wsl.localhost\\Ubuntu-22.04\\home\\korne\\user-modelling-project-apples-2\\experiment"
+set experiment_path "D:\\RUG\\Term 3\\ScientificVisualization\\user-modelling-project-apples-2\\experiment"
 set disable_garbage_collection True
 set description "The main experiment item"
 set color_backend psycho

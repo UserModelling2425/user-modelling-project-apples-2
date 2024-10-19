@@ -1,0 +1,26 @@
+    trial_num  trial_start_time         rt  correct   prompt     answer response
+0           1        21737.8733        inf    False  bustani     garden         
+1           2        38704.8819  1641.8231     True    tunda      fruit    fruit
+2           3        42904.8418  4740.9946    False    jicho        eye      boz
+3           4        52335.1433  4235.6197     True     basi        bus      bus
+4           5        59262.5703  3311.3144     True   kijana        boy      boy
+5           6        68602.7591  2491.0250    False     keja      house     shop
+6           7        74245.5798  1456.1786     True    rangi      color    color
+7           8        78661.6888  1656.1154     True     duka       shop     shop
+8           9        83195.0814  1634.6692     True     roho       soul     soul
+9          10        87771.3211  7598.9629    False   kanisa     church    store
+10         11        98492.5067  9281.2188    False    barua     letter    house
+11         12       110492.3271  1129.4820     True   rafiki     friend   friend
+12         13       114359.4694  4462.2671     True     maji        ice      ice
+13         14       121219.7333  1201.9878     True      ufu      death    death
+14         15       126037.6375  3112.0418     True    wimbo       song     song
+15         16       131582.9093  5231.0861    False    ujuzi  knowledge    death
+16         17       139874.5970  7371.1223    False     kioo     mirror     soul
+17         18       150534.2720  4959.3925    False   karamu      party    store
+18         19       158170.9251  5354.7629    False  dhoruba      storm   doctor
+19         20       166274.0498  1427.5988    False    afisi     office   doctor
+20         21       171165.1605  2343.8696     True    pombe       beer     beer
+21         22       176091.8645  4568.9997    False    chama    society    store
+22         23       183419.0815  1980.9868     True     siri     secret   secret
+23         24       189431.3043  5062.3232    False     adui      enemy   doctor
+24         25       197292.0916  4721.4994    False   tabibu     doctor    store

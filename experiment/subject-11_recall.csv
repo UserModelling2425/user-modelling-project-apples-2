@@ -1,0 +1,30 @@
+    trial_num  trial_start_time         rt  correct   prompt   answer response
+0           1        24358.9539  2108.2869     True   samaki     fish     fish
+1           2        29204.0617  2391.0814     True   kanisa   church   church
+2           3        35640.5797  1884.6023     True    dunia    world    world
+3           4        40368.7854  1018.4162     True     kioo   mirror   mirror
+4           5        44196.2221  1056.5542     True    jioni  evening  evening
+5           6        48210.6991  2640.4544     True    kamba     rope     rope
+6           7        53629.0756  5822.0678     True    barua   letter   letter
+7           8        62379.6378  2583.5148    False     kisu    knife      hat
+8           9        68560.3440  4643.4813     True    tunda    fruit    fruit
+9          10        76282.9492  1704.1944     True    elimu  science  science
+10         11        81314.5474  1125.3800     True   saduku      box      box
+11         12        84926.6517  4220.4737     True     keja    house    house
+12         13        91986.2516  1792.8708     True     roho     soul     soul
+13         14        96604.3983   966.7029     True    pombe     beer     beer
+14         15       100772.3236  2222.8318    False   farasi    horse    party
+15         16       106215.4209  2642.3220    False   karamu    party     head
+16         17       113719.4927  2186.7798     True  tumbili   monkey   monkey
+17         18       119372.2722  2758.7847     True    wimbo     song     song
+18         19       124930.9892  2663.9907     True   bahari      sea      sea
+19         20       131434.4591  4096.5883     True     dubu     bear     bear
+20         21       139792.9910  5834.0927    False     kazi     work      hat
+21         22       148815.6680  3357.8183     True   kichwa     head     head
+22         23       156870.2450  2420.7663     True    kofia      hat      hat
+23         24       161930.8727  6752.1593    False    limau    lemon   letter
+24         25       171633.2465  5857.7537    False    ajabu   wonder         
+25         26       179422.1739  1236.8181     True     siri   secret   secret
+26         27       183954.4172  1136.5423     True    wingu    cloud    cloud
+27         28       187875.6948  9055.3118    False    skati    skirt         
+28         29       198863.5075  5637.8281     True  maumiva     pain     pain
