@@ -1,0 +1,26 @@
+    trial_num  trial_start_time          rt  correct    prompt       answer     response
+0           1        55547.1968  14510.1079    False    maziwa         milk             
+1           2        72006.2127   2368.4964    False     kofia          hat       coffee
+2           3        77469.3060   8984.1968    False      jiwe        stone             
+3           4        88414.8322   4324.5746    False   maumiva         pain             
+4           5        94695.7636   6561.3049    False      kazi         work          cat
+5           6       104075.7519   6534.8689    False     lango         door             
+6           7       112570.3182   1310.1659     True      siri       secret       secret
+7           8       117001.3780   1235.2397     True      mbwa          dog          dog
+8           9       120833.1144   6213.0529     True    tabibu       doctor       doctor
+9          10       130128.6351  13208.3103    False   kitanda          bed             
+10         11       145288.3919   1515.8152     True      bibi  grandmother  grandmother
+11         12       150586.1897   1631.3827     True    chanjo     scissors     scissors
+12         13       155666.6087   7810.6284    False    rafiki       friend         work
+13         14       166611.5880   4130.5115    False      anga          sky             
+14         15       172692.0844   6309.3583    False    wakati        alarm             
+15         16       180955.6088   5446.9938    False    chunga          pot             
+16         17       188368.4202  11343.9043    False   bustani       garden             
+17         18       201661.7738   1397.1983     True     wingu        cloud        cloud
+18         19       205926.5021   1606.1392     True     lugha     language     language
+19         20       210691.4724   7446.8391    False   shukuru       thanks             
+20         21       220087.1169   1764.5975     True     afisi       office       office
+21         22       224634.5441   1947.6613    False     elimu      science       doctor
+22         23       229481.9669   3961.2320    False      keja        house             
+23         24       235395.9442   5857.8321    False  kaputula        pants       friend
+24         25       244991.3759   4518.4626     True     rangi        color        color
