@@ -1,0 +1,25 @@
+    trial_num  trial_start_time          rt  correct   prompt       answer     response
+0           1        18340.0579   2636.0503     True   wakati        alarm        alarm
+1           2        23846.2925   1497.7589     True    pombe         beer         beer
+2           3        28070.2575   7980.7942    False     roho         soul        sleep
+3           4        38724.7487   1331.2241     True     kuku      chicken      chicken
+4           5        42936.9624   2017.1667    False   chanjo     scissors       church
+5           6        47900.5629   1219.4910    False  maslahi     interest       church
+6           7        52034.1202   3757.8277     True   kanisa       church       church
+7           8        58663.7641   6256.1725     True  bustani       garden       garden
+8           9        67797.9704    962.0260     True     basi          bus          bus
+9          10        71118.8333   2514.3882     True  maumiva         pain         pain
+10         11        76464.1948   1775.7804     True     bibi  grandmother  grandmother
+11         12        81736.6878   4455.2778     True  chapati        bread        bread
+12         13        89009.6289   6278.3398     True    lango         door         door
+13         14        97802.9762   3092.9843    False     kioo       mirror        knife
+14         15       103500.2977   3611.8329    False   maziwa         milk     interest
+15         16       110160.9586   9951.1541    False  tumbili       monkey         tomb
+16         17       122548.6844   4723.2143     True    wimbo         song         song
+17         18       129912.0882   1504.0511     True     kisu        knife        knife
+18         19       133985.0225   9380.6134    False    rangi        color        dream
+19         20       145911.9518  13935.9199    False     jiwe        stone             
+20         21       161785.0162     17.5179    False   samaki         fish             
+21         22       163736.5588  10007.2801    False   kijana          boy         food
+22         23       176439.1399     17.2859    False   saduku          box             
+23         24       178390.5960         inf     True  chakula         food         food

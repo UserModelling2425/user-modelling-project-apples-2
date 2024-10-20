@@ -1,0 +1,29 @@
+    trial_num  trial_start_time          rt  correct    prompt       answer  response
+0           1        18514.6577   2496.1994    False     pombe         beer    banana
+1           2        24248.3728   4453.9897     True   kitanda          bed       bed
+2           3        31187.4054   5550.7976    False  kaputula        pants    potato
+3           4        39951.5396   6335.2256    False      kazi         work    office
+4           5        49394.1705  12116.6125    False    tabibu       doctor          
+5           6        63448.1678   5102.5732    False    degaga      glasses          
+6           7        70484.6837   1266.1441     True   chapati        bread     bread
+7           8        75084.1467   4426.6385    False      anga          sky          
+8           9        81447.9980   1180.7048     True      siri       secret    secret
+9          10        86035.8073   1658.8711     True      jiwe        stone     stone
+10         11        91877.8319   1478.4453     True     wingu        cloud     cloud
+11         12        96278.2100   1112.5404     True     afisi       office    office
+12         13       100311.0896   4503.6264    False     tofaa        apple          
+13         14       106750.6819   1688.0587     True     kofia          hat       hat
+14         15       110999.7596   1798.8914    False     lugha     language      lake
+15         16       115223.5955   2087.1031     True    askari       police    police
+16         17       120277.9027   6208.7544    False      dubu         bear          
+17         18       128423.6461   1222.9794    False      bibi  grandmother   grandma
+18         19       133071.9479   2896.1214     True   maumiva         pain      pain
+19         20       138653.4610   3502.2048    False   maslahi     interest      hope
+20         21       145350.4159   2664.1401    False    maziwa         milk   science
+21         22       151588.9234         inf    False    kijana          boy          
+22         23       158059.8837   1738.6707     True    maliki         king      king
+23         24       162368.4761   4798.0919     True       ufu        death     death
+24         25       170144.4850   1342.0915    False     elimu      science          
+25         26       173423.6373   1670.9941     True      kuku      chicken   chicken
+26         27       179350.2067   1728.3207    False   tumaini         hope  interest
+27         28       184677.7850   3835.6941    False    saduku          box          

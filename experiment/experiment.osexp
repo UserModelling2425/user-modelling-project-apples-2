@@ -15,6 +15,8 @@ set sound_channels 2
 set sound_buf_size 1024
 set sampler_backend psycho
 set round_decimals 2
+set psychopy_screen 1
+set psychopy_monitor testMonitor
 set mouse_backend psycho
 set keyboard_backend psycho
 set height 768
@@ -26,7 +28,7 @@ set font_size 18
 set font_italic False
 set font_family mono
 set font_bold False
-set experiment_path "\\\\wsl.localhost\\Ubuntu-22.04\\home\\korne\\user-modelling-project-apples-2\\experiment"
+set experiment_path "D:\\RUG\\Term 3\\ScientificVisualization\\user-modelling-project-apples-2\\experiment"
 set disable_garbage_collection False
 set description "The main experiment item"
 set coordinates uniform

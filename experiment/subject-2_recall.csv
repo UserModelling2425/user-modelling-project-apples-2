@@ -1,0 +1,25 @@
+    trial_num  trial_start_time          rt  correct   prompt    answer  response
+0           1        30107.8966   4881.9686    False   likizo  holidays       pot
+1           2        37705.7793     32.7156    False     adui     enemy          
+2           3        39688.3518  14071.0970    False    barua    letter      beer
+3           4        56713.8850   4113.1955    False   chunga       pot      shop
+4           5        64226.9097   3030.6735     True     duka      shop      shop
+5           6        70375.2234   1230.2081     True    pombe      beer      beer
+6           7        74489.4248   1299.5971     True     maji       ice       ice
+7           8        78470.8017   1864.3293     True   karamu     party     party
+8           9        83734.8346   1990.2442    False     kioo    mirror       eye
+9          10        88465.1973   1115.5154     True    limau     lemon     lemon
+10         11        92447.2814   1197.8760     True    wimbo      song      song
+11         12        96478.5263   1698.0582     True   kijana       boy       boy
+12         13       101809.5347   8045.0948     True     siri    secret    secret
+13         14       113753.8152   1781.4480     True    tofaa     apple     apple
+14         15       118201.8497   3904.0313    False   wakati     alarm  holidays
+15         16       125997.6917   8611.6130     True    kofia       hat       hat
+16         17       137276.0727   2122.7458    False  baskeli      bike       bus
+17         18       141823.8928     32.2403    False  maumiva      pain          
+18         19       143807.0651   7941.1648    False    dunia     world          
+19         20       153702.1993   1135.7260     True     basi       bus       bus
+20         21       157266.3147   1747.2423     True     baba    father    father
+21         22       161981.4806   8540.8499    False    jicho       eye          
+22         23       172476.8103   1737.2547     True  bustani    garden    garden
+23         24       177207.7142   6561.9107    False   tabibu    doctor          
